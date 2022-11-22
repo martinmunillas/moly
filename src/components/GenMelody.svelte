@@ -1,7 +1,8 @@
 <script lang="ts">
-  import * as Tone from "tone";
-  import { genMelody, notes, scales, type Melody } from "./genMelody";
-  const synth = new Tone.Synth().toDestination();
+  import { genMelody, type Melody } from "../lib/melody";
+  import { notes } from "../lib/music";
+  import { playMusic } from "../lib/playMusic";
+  import { scales } from "../lib/scale";
   let melodies: Melody[] = [];
   let bpm = 120;
   let selectedMelody = null;
@@ -12,16 +13,11 @@
     selectedMelody = melodies.length - 1;
     melodies = melodies;
   };
+
   const play = () => {
-    if (selectedMelody === null) return;
-    const melody = melodies[selectedMelody];
-    let time = 0;
-    for (const { note, duration } of melody.notes) {
-      const noteDuration = duration * (60 / bpm);
-      synth.triggerAttackRelease(note, noteDuration, Tone.now() + time);
-      time += noteDuration;
-    }
+    playMusic(melodies[selectedMelody].music, bpm);
   };
+
   let setBpm = (e) => {
     bpm = e.target.value;
   };

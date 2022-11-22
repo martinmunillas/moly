@@ -1,20 +1,18 @@
-export class CircularArray<T> {
-  constructor(private items: T[] | readonly T[]) {}
+export class CircularArray<T> extends Array<T> {
+  constructor(items: T[] | readonly T[]) {
+    super(...items);
+  }
   get(index: number): T {
     if (index >= 0) {
-      return this.items[index % this.items.length];
+      return this[index % this.length];
     } else {
-      return this.items[
-        this.items.length - (-index % this.items.length || this.items.length)
-      ];
+      return this[this.length - (-index % this.length || this.length)];
     }
   }
 
-  map<S>(fn: (i: T) => S): CircularArray<S> {
-    return new CircularArray(this.items.map(fn));
-  }
-
   toArray(): T[] {
-    return this.items.slice();
+    return this.slice();
   }
 }
+
+export type CircularArrayItem<T> = T extends CircularArray<infer U> ? U : never;
